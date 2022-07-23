@@ -30,6 +30,7 @@ namespace TurnAi.PrisonnersDilemma {
             {4, 1}
         };
 
+        private readonly Actions defaultAction = Actions.Silent;
         private readonly int numTotalTurns = 10;
         private int turnsPlayed = 0;
         private int[] points = new int[NumPlayers];
@@ -41,7 +42,11 @@ namespace TurnAi.PrisonnersDilemma {
         public bool IsFinished { get; private set; } = false;
 
         public void PlayTurn(int playerId, JsonNode? turn) {
-            throw new System.NotImplementedException();
+            AssertPlayerId(playerId);
+            AssertNotFinished();
+            (Actions action, string? error) = ParseTurn(turn);
+            errors[playerId] = error; // stores null if no error
+            history[playerId].Add(action);
         }
 
         public bool MayPlay(int playerId) {
@@ -53,7 +58,8 @@ namespace TurnAi.PrisonnersDilemma {
         }
 
         public string? GetError(int playerId) {
-            throw new System.NotImplementedException();
+            AssertPlayerId(playerId);
+            return errors[playerId];
         }
 
         public int GetPoints(int playerId) {
@@ -71,6 +77,24 @@ namespace TurnAi.PrisonnersDilemma {
                     $"Player {playerId} does not exist."
                 );
             }
+        }
+
+        // throw an exception if game is finished
+        private void AssertNotFinished() {
+            if (IsFinished) throw new GameStateException("Game is finished.");
+        }
+
+        /// <returns>Parsed action and error message.</returns>
+        private ValueTuple<Actions, string?> ParseTurn(JsonNode? turn) {
+            if (turn == null) {
+                return (defaultAction, "No turn provided.");
+            }
+            var deserialized = JsonSerializer.Deserialize<Turn>(turn, Config.Options);
+            var action = deserialized!.Action;
+            if (action == null) {
+                return (defaultAction, "No action provided.");
+            }
+            return (action.Value, null);
         }
 
         private void UpdatePoints(Actions[] actions) {
