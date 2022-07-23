@@ -17,16 +17,12 @@ namespace TurnAi {
         /// <summary>Take actions provided by the player and play them.</summary>
         /// <param name="turn">
         /// Json provided by the player. Format correctness is checked, errors can be retrieved with
-        /// <c>GetError</c>.
+        /// <c>GetError</c>. Can be <c>null</c> if the player didn't provide a turn in time.
+        /// If, for any reason, the turn provided is invalid, the default turn is played.
         /// </param>
         /// <exception cref="ArgumentOutOfRangeException">If player does not exist.</exception>
         /// <exception cref="GameStateException">If game is finished.</exception>
-        void PlayTurn(int playerId, JsonNode turn);
-
-        /// <summary>Used if no turn was provided in time.</summary>
-        /// <exception cref="ArgumentOutOfRangeException">If player does not exist.</exception>
-        /// <exception cref="GameStateException">If game is finished.</exception>
-        void PlayDefaultTurn(int playerId);
+        void PlayTurn(int playerId, JsonNode? turn);
 
         /// <summary>If it is this player's turn.</summary>
         /// <exception cref="ArgumentOutOfRangeException">If player does not exist.</exception>

@@ -40,11 +40,7 @@ namespace TurnAi.PrisonnersDilemma {
         int IGame.NumPlayers => NumPlayers;
         public bool IsFinished { get; private set; } = false;
 
-        public void PlayTurn(int playerId, JsonNode turn) {
-            throw new System.NotImplementedException();
-        }
-
-        public void PlayDefaultTurn(int playerId) {
+        public void PlayTurn(int playerId, JsonNode? turn) {
             throw new System.NotImplementedException();
         }
 
