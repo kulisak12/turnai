@@ -68,22 +68,6 @@ namespace TurnAi.PrisonnersDilemma {
             return points[playerId];
         }
 
-        // throw an exception if playerId is invalid
-        private void AssertPlayerId(int playerId) {
-            if (playerId < 0 || playerId >= NumPlayers) {
-                throw new ArgumentOutOfRangeException(
-                    nameof(playerId),
-                    playerId,
-                    $"Player {playerId} does not exist."
-                );
-            }
-        }
-
-        // throw an exception if game is finished
-        private void AssertNotFinished() {
-            if (IsFinished) throw new GameStateException("Game is finished.");
-        }
-
         /// <returns>Parsed action and error message.</returns>
         private ValueTuple<Actions, string?> ParseTurn(JsonNode? turn) {
             if (turn == null) {
@@ -98,8 +82,24 @@ namespace TurnAi.PrisonnersDilemma {
         }
 
         private void UpdatePoints(Actions[] actions) {
-            points[0] += payoffs[(int) actions[0], (int) actions[1]];
-            points[1] += payoffs[(int) actions[1], (int) actions[0]];
+            points[0] += payoffs[(int)actions[0], (int)actions[1]];
+            points[1] += payoffs[(int)actions[1], (int)actions[0]];
+        }
+
+        // throw an exception if playerId is invalid
+        private void AssertPlayerId(int playerId) {
+            if (playerId < 0 || playerId >= NumPlayers) {
+                throw new ArgumentOutOfRangeException(
+                    nameof(playerId),
+                    playerId,
+                    $"Player {playerId} does not exist."
+                );
+            }
+        }
+
+        // throw an exception if game is finished
+        private void AssertNotFinished() {
+            if (IsFinished) throw new GameStateException("Game is finished.");
         }
     }
 
