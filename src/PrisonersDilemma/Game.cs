@@ -25,13 +25,13 @@ namespace TurnAi.PrisonnersDilemma {
         }
 
         // first index = my action, second index = opponent's action
-        private readonly int[,] payoffs = new int[,] {
+        private static readonly int[,] payoffs = new int[,] {
             {3, 0},
             {4, 1}
         };
 
-        private readonly Actions defaultAction = Actions.Silent;
-        private readonly int numTotalTurns = 10;
+        private static readonly Actions defaultAction = Actions.Silent;
+        private static readonly int numTotalTurns = 10;
         private int turnsPlayed = 0;
         private int[] points = new int[NumPlayers];
         private List<Actions>[] history = new List<Actions>[NumPlayers];
