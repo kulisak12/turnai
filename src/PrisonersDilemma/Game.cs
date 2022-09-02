@@ -5,7 +5,7 @@ using System.Text.Json.Nodes;
 
 namespace TurnAi.PrisonnersDilemma {
 
-    class PrisonnersDilemma : IGame {
+    public class PrisonnersDilemmaGame : IGame {
         private enum Actions {
             Silent = 0,
             Betray = 1
@@ -47,14 +47,25 @@ namespace TurnAi.PrisonnersDilemma {
             (Actions action, string? error) = ParseTurn(turn);
             errors[playerId] = error; // stores null if no error
             history[playerId].Add(action);
+
+            if (CanEvaluateTurn()) EvaluateTurn();
         }
 
         public bool MayPlay(int playerId) {
-            throw new System.NotImplementedException();
+            AssertPlayerId(playerId);
+            if (IsFinished) return false;
+            return history[playerId].Count == turnsPlayed;
         }
 
         public JsonNode GetGameInfo(int playerId) {
-            throw new System.NotImplementedException();
+            AssertPlayerId(playerId);
+            int otherPlayerId = 1 - playerId;
+            GameInfo gameInfo = new() {
+                TurnsLeft = numTotalTurns - turnsPlayed,
+                YourActions = history[playerId],
+                OpponentActions = history[otherPlayerId],
+            };
+            return JsonSerializer.SerializeToNode(gameInfo)!;
         }
 
         public string? GetError(int playerId) {
@@ -81,9 +92,23 @@ namespace TurnAi.PrisonnersDilemma {
             return (action.Value, null);
         }
 
+        private void EvaluateTurn() {
+            var actions = new Actions[NumPlayers];
+            for (int i = 0; i < NumPlayers; i++) {
+                actions[i] = history[i][turnsPlayed];
+            }
+            UpdatePoints(actions);
+            turnsPlayed++;
+            if (turnsPlayed == numTotalTurns) IsFinished = true;
+        }
+
         private void UpdatePoints(Actions[] actions) {
             points[0] += payoffs[(int)actions[0], (int)actions[1]];
             points[1] += payoffs[(int)actions[1], (int)actions[0]];
+        }
+
+        private bool CanEvaluateTurn() {
+            return System.Linq.Enumerable.All(history, actions => actions.Count > turnsPlayed);
         }
 
         // throw an exception if playerId is invalid
