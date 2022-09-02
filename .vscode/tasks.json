@@ -7,13 +7,13 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/TurnAi/TurnAi.csproj",
+                "${workspaceFolder}/src/Main/TurnAi.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile",
             "options": {
-                "cwd": "${workspaceFolder}/src/TurnAi"
+                "cwd": "${workspaceFolder}/src/Main"
             },
             "presentation": {
                 "echo": true,
@@ -23,30 +23,6 @@
                 "showReuseMessage": false,
                 "clear": true,
             }
-        },
-        {
-            "label": "publish",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "publish",
-                "${workspaceFolder}/TurnAi.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/TurnAi.csproj"
-            ],
-            "problemMatcher": "$msCompile"
         }
     ]
 }
