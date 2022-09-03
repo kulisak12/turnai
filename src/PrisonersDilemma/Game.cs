@@ -84,7 +84,7 @@ namespace TurnAi.PrisonnersDilemma {
             if (turn == null) {
                 return (defaultAction, "No turn provided.");
             }
-            var deserialized = JsonSerializer.Deserialize<Turn>(turn, Config.Options);
+            var deserialized = JsonSerializer.Deserialize<Turn>(turn, Config.SerializerOptions);
             var action = deserialized!.Action;
             if (action == null) {
                 return (defaultAction, "No action provided.");
