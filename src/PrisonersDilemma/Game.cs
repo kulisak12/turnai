@@ -71,7 +71,7 @@ namespace TurnAi.PrisonnersDilemma {
                 YourActions = history[playerId],
                 OpponentActions = history[otherPlayerId],
             };
-            return JsonSerializer.SerializeToNode(gameInfo)!;
+            return JsonSerializer.SerializeToNode(gameInfo, Config.SerializerOptions)!;
         }
 
         public string? GetError(int playerId) {

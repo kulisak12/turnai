@@ -69,7 +69,9 @@ namespace TurnAi {
             try {
                 using StreamReader reader = new(requestStream);
                 string requestString = reader.ReadToEnd();
-                requestNode = JsonNode.Parse(requestString, null, Config.DocumentOptions);
+                requestNode = JsonSerializer.Deserialize<JsonNode>(
+                    requestString, Config.SerializerOptions
+                );
             }
             catch (Exception ex) when (ex is ArgumentException || ex is IOException) {
                 WriteError(response, HttpStatusCode.BadRequest, "Error reading request");

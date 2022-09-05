@@ -84,7 +84,7 @@ namespace TurnAi {
 
             JsonNode gameInfo = match.Game.GetGameInfo(playerId);
             RobotDataResponse response = new(match.Seq[playerId], gameInfo);
-            return JsonSerializer.SerializeToNode(response);
+            return JsonSerializer.SerializeToNode(response, Config.SerializerOptions);
         }
 
         public JsonNode? RobotPost(int robotId, JsonNode turnNode) {
@@ -94,7 +94,9 @@ namespace TurnAi {
             }
             Match match = matches[robotId];
             int playerId = match.PlayerIds[robotId];
-            RobotTurnRequest request = JsonSerializer.Deserialize<RobotTurnRequest>(turnNode)!;
+            RobotTurnRequest request = JsonSerializer.Deserialize<RobotTurnRequest>(
+                turnNode, Config.SerializerOptions
+            )!;
 
             // prevent resubmission of the same turn
             if (request.Seq != match.Seq[playerId]) {

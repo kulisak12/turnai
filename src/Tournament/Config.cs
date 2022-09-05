@@ -5,14 +5,14 @@ namespace TurnAi {
 
     public static class Config {
         public static JsonSerializerOptions SerializerOptions = new() {
-            PropertyNameCaseInsensitive = true,
-            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase
-        };
-
-        public static JsonDocumentOptions DocumentOptions = new() {
+            // parsing
             AllowTrailingCommas = true,
-            CommentHandling = JsonCommentHandling.Skip,
-            MaxDepth = 64,
+            DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+            // PropertyNameCaseInsensitive = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            // writing
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = true,
         };
 
         public static string Address = "http://localhost:3000/";
