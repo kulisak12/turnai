@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace TurnAi {
 
     /// <summary>All-purpose factory.</summary>
@@ -10,5 +12,13 @@ namespace TurnAi {
         public static readonly IFactory<T> Instance = new Factory<T>();
         private Factory() { }
         public T Create() => new T();
+    }
+
+    public static class Utility {
+        public static JsonNode GetErrorNode(string message) {
+            return new JsonObject {
+                { "error", message },
+            };
+        }
     }
 }

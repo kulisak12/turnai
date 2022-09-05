@@ -39,7 +39,7 @@ namespace TurnAi {
             // translate robot name to id
             string? robotName = request.Url?.LocalPath;
             if (robotName == null || !robotIds.ContainsKey(robotName)) {
-                WriteResponse(response, HttpStatusCode.NotFound, GetErrorNode("Robot not found"));
+                WriteError(response, HttpStatusCode.NotFound, "Robot not found");
                 return;
             }
             int robotId = robotIds[robotName];
@@ -84,16 +84,10 @@ namespace TurnAi {
             WriteResponse(response, code, error);
         }
 
-        private JsonNode GetErrorNode(string message) {
-            return new JsonObject {
-                { "error", message },
-            };
-        }
-
         private void WriteError(
             HttpListenerResponse response, HttpStatusCode code, string message
         ) {
-            WriteResponse(response, code, GetErrorNode(message));
+            WriteResponse(response, code, Utility.GetErrorNode(message));
         }
 
         private void WriteResponse(
