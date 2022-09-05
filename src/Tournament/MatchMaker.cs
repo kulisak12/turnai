@@ -6,15 +6,15 @@ namespace TurnAi {
     /// <summary>Algorithm for matching players in a tournament.</summary>
     public interface IMatchMaker {
 
+        /// <summary>If all matches have been played.</summary>
+        bool IsFinished { get; }
+
         /// <summary>Add robot that may be placed in a new match.</summary>
         void AddWaitingRobot(int robotId);
 
         /// <summary>Get the next match as list of robots.</summary>
         /// <returns><c>null</c> if no match is available.</returns>
         int[]? GetNextMatch();
-
-        /// <summary>If all matches have been played.</summary>
-        bool IsFinished();
     }
 
     /// <summary>Ensure that each robot plays against each other robot once.</summary>
@@ -25,6 +25,10 @@ namespace TurnAi {
         private List<int>[] unplayedMatches;
         // planned matches
         private Queue<int[]> nextMatches = new();
+
+        public bool IsFinished {
+            get => waitingRobots.Count == numRobots && nextMatches.Count == 0;
+        }
 
         public AllPairsMatchMaker(int numRobots) {
             this.numRobots = numRobots;
@@ -65,10 +69,6 @@ namespace TurnAi {
         public int[]? GetNextMatch() {
             if (nextMatches.Count == 0) return null;
             return nextMatches.Dequeue();
-        }
-
-        public bool IsFinished() {
-            return waitingRobots.Count == 0 && nextMatches.Count == numRobots;
         }
     }
 }
