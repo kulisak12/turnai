@@ -15,7 +15,8 @@ namespace TurnAi {
         JsonNode? RobotGet(int robotId);
 
         /// <summary>Send turn data for given robot.</summary>
-        string? RobotPost(int robotId, JsonNode turnNode);
+        /// <returns><c>null</c> on success, error JSON otherwise.</returns>
+        JsonNode? RobotPost(int robotId, JsonNode turnNode);
     }
 
     /// <summary>
@@ -41,7 +42,7 @@ namespace TurnAi {
             throw new NotImplementedException();
         }
 
-        public string? RobotPost(int robotId, JsonNode turnNode) {
+        public JsonNode? RobotPost(int robotId, JsonNode turnNode) {
             throw new NotImplementedException();
         }
     }

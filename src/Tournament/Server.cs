@@ -79,7 +79,9 @@ namespace TurnAi {
             }
 
             if (requestNode == null) return;
-            round.RobotPost(robotId, requestNode);
+            JsonNode? error = round.RobotPost(robotId, requestNode);
+            var code = (error == null) ? HttpStatusCode.OK : HttpStatusCode.BadRequest;
+            WriteResponse(response, code, error);
         }
 
         private JsonNode GetErrorNode(string message) {
