@@ -31,7 +31,6 @@ namespace TurnAi.PrisonersDilemma {
         };
 
         private static readonly Actions defaultAction = Actions.Silent;
-        private static readonly int numTotalTurns = 10;
         private int turnsPlayed = 0;
         private int[] points = new int[NumPlayers];
         private List<Actions>[] history = new List<Actions>[NumPlayers];
@@ -39,6 +38,7 @@ namespace TurnAi.PrisonersDilemma {
 
         public static int NumPlayers { get => 2; }
         int IGame.NumPlayers => NumPlayers;
+        public int NumTotalTurns { get; init; } = 10;
         public bool IsFinished { get; private set; } = false;
 
         public PrisonersDilemmaGame() {
@@ -67,7 +67,7 @@ namespace TurnAi.PrisonersDilemma {
             AssertPlayerId(playerId);
             int otherPlayerId = 1 - playerId;
             GameInfo gameInfo = new() {
-                TurnsLeft = numTotalTurns - turnsPlayed,
+                TurnsLeft = NumTotalTurns - turnsPlayed,
                 YourActions = history[playerId],
                 OpponentActions = history[otherPlayerId],
             };
@@ -105,7 +105,7 @@ namespace TurnAi.PrisonersDilemma {
             }
             UpdatePoints(actions);
             turnsPlayed++;
-            if (turnsPlayed == numTotalTurns) IsFinished = true;
+            if (turnsPlayed == NumTotalTurns) IsFinished = true;
         }
 
         private void UpdatePoints(Actions[] actions) {
