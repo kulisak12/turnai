@@ -60,16 +60,25 @@ namespace TurnAi {
             }
         }
 
-        public int NumRobots { get; }
         private IMatchMaker matchMaker;
         private IFactory<IGame> gameFactory;
         private Dictionary<int, Match> matches = new(); // mapping between robot ids and matches
         private int[] totalPoints;
+        private Action onRoundFinished;
 
-        public Round(int numRobots, IMatchMaker matchMaker, IFactory<IGame> gameFactory) {
+        public int NumRobots { get; }
+        public bool IsFinished {
+            get => matches.Count == 0 && matchMaker.IsFinished;
+        }
+
+        public Round(
+            int numRobots, IMatchMaker matchMaker,
+            IFactory<IGame> gameFactory, Action onRoundFinished
+        ) {
             NumRobots = numRobots;
             this.matchMaker = matchMaker;
             this.gameFactory = gameFactory;
+            this.onRoundFinished = onRoundFinished;
             totalPoints = new int[NumRobots];
 
             for (int i = 0; i < numRobots; i++) {
@@ -124,6 +133,7 @@ namespace TurnAi {
                 matchMaker.AddWaitingRobot(robotId);
             }
             StartNewMatches();
+            if (IsFinished) onRoundFinished();
         }
 
         private void StartNewMatches() {
