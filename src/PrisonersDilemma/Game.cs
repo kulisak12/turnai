@@ -21,7 +21,7 @@ namespace TurnAi.PrisonersDilemma {
         private class GameInfo {
             public int TurnsLeft { get; set; }
             public List<Actions>? YourActions { get; set; }
-            public List<Actions>? OpponentActions { get; set; }
+            public List<Actions>? OpponentsActions { get; set; }
         }
 
         // first index = my action, second index = opponent's action
@@ -67,9 +67,9 @@ namespace TurnAi.PrisonersDilemma {
             AssertPlayerId(playerId);
             int otherPlayerId = 1 - playerId;
             GameInfo gameInfo = new() {
-                TurnsLeft = NumTotalTurns - turnsPlayed,
+                TurnsLeft = NumTotalTurns - history[playerId].Count,
                 YourActions = history[playerId],
-                OpponentActions = history[otherPlayerId],
+                OpponentsActions = history[otherPlayerId],
             };
             return JsonSerializer.SerializeToNode(gameInfo, Config.SerializerOptions)!;
         }
