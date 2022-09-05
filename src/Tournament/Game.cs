@@ -48,16 +48,6 @@ namespace TurnAi {
         int GetPoints(int playerId);
     }
 
-    /// <summary>Factory for starting new matches in games.</summary>
-    /// <remarks>Follows singleton pattern, use the <c>Instance</c> field.</remarks>
-    public class GameFactory<TGame> where TGame : IGame, new() {
-        public static readonly GameFactory<TGame> Instance = new();
-        private GameFactory() { }
-
-        /// <summary>Start a new match.</summary>
-        public static TGame StartNew() => new TGame();
-    }
-
     /// <summary>
     /// Thrown when the action is unsupported in the current state of the game.
     /// </summary>
