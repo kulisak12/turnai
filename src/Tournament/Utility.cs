@@ -1,3 +1,4 @@
+using System;
 using System.Text.Json.Nodes;
 
 namespace TurnAi {
@@ -15,6 +16,8 @@ namespace TurnAi {
     }
 
     public static class Utility {
+        public static Action Noop = () => { };
+
         public static JsonNode GetErrorNode(string message) {
             return new JsonObject {
                 { "error", message },
