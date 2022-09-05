@@ -17,4 +17,32 @@ namespace TurnAi {
         /// <summary>Send turn data for given robot.</summary>
         string? RobotPost(int robotId, JsonNode turnNode);
     }
+
+    /// <summary>
+    /// One round of the tournament.
+    /// New instance is created for each round.
+    /// </summary>
+    public class Round : IRound {
+        public int NumRobots { get; }
+        private IMatchMaker matchMaker;
+        private IFactory<IGame> gameFactory;
+
+        public Round(int numRobots, IMatchMaker matchMaker, IFactory<IGame> gameFactory) {
+            NumRobots = numRobots;
+            this.matchMaker = matchMaker;
+            this.gameFactory = gameFactory;
+
+            for (int i = 0; i < numRobots; i++) {
+                matchMaker.AddWaitingRobot(i);
+            }
+        }
+
+        public JsonNode? RobotGet(int robotId) {
+            throw new NotImplementedException();
+        }
+
+        public string? RobotPost(int robotId, JsonNode turnNode) {
+            throw new NotImplementedException();
+        }
+    }
 }
