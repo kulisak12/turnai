@@ -36,6 +36,10 @@ namespace TurnAi {
                 PlayerIds = playerIds;
                 Game = game;
                 Seq = new int[PlayerIds.Count];
+                // initialize sequence numbers randomly
+                for (int i = 0; i < Seq.Length; i++) {
+                    Seq[i] = Random.Shared.Next(1, int.MaxValue / 2);
+                }
             }
         }
 
