@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace TurnAi.PrisonnersDilemma {
+namespace TurnAi.PrisonersDilemma {
 
-    public class PrisonnersDilemmaGame : IGame {
+    public class PrisonersDilemmaGame : IGame {
         private enum Actions {
             Silent = 0,
             Betray = 1
@@ -41,7 +41,7 @@ namespace TurnAi.PrisonnersDilemma {
         int IGame.NumPlayers => NumPlayers;
         public bool IsFinished { get; private set; } = false;
 
-        public PrisonnersDilemmaGame() {
+        public PrisonersDilemmaGame() {
             for (int i = 0; i < NumPlayers; i++) {
                 history[i] = new List<Actions>();
             }
