@@ -12,6 +12,13 @@ namespace TurnAi {
             { "alice", 1 },
             { "bob", 2 },
         };
+        private IRound round;
+
+        public Server(IRound round) {
+            this.round = round;
+        }
+
+        public void SetRound(IRound round) => this.round = round;
 
         public void Run(string address) {
             using var listener = new HttpListener();
@@ -39,7 +46,7 @@ namespace TurnAi {
 
             // get request
             if (request.HttpMethod == "GET") {
-                JsonNode? responseNode = RobotGet(robotId);
+                JsonNode? responseNode = round.RobotGet(robotId);
                 WriteResponse(response, HttpStatusCode.OK, responseNode);
                 return;
             }
@@ -72,7 +79,7 @@ namespace TurnAi {
             }
 
             if (requestNode == null) return;
-            RobotPost(robotId, requestNode);
+            round.RobotPost(robotId, requestNode);
         }
 
         private JsonNode GetErrorNode(string message) {
@@ -99,16 +106,6 @@ namespace TurnAi {
             responseStream.Write(buffer, 0, buffer.Length);
             responseStream.Close();
         }
-
-        // * placeholder methods
-        private JsonNode? RobotGet(int robotId) {
-            return null;
-        }
-
-        private string? RobotPost(int robotId, JsonNode requestNode) {
-            return null;
-        }
-
     }
 
 }
