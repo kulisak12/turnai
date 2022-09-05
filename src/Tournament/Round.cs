@@ -71,6 +71,7 @@ namespace TurnAi {
             for (int i = 0; i < numRobots; i++) {
                 matchMaker.AddWaitingRobot(i);
             }
+            StartNewMatches();
         }
 
         public JsonNode? RobotGet(int robotId) {
@@ -116,6 +117,7 @@ namespace TurnAi {
                 matches.Remove(robotId);
                 matchMaker.AddWaitingRobot(robotId);
             }
+            StartNewMatches();
         }
 
         private void StartNewMatches() {

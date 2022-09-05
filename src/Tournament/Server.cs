@@ -9,8 +9,8 @@ using System.Text.Json.Nodes;
 namespace TurnAi {
     public class Server {
         private Dictionary<string, int> robotIds = new() {
-            { "alice", 1 },
-            { "bob", 2 },
+            { "alice", 0 },
+            { "bob", 1 },
         };
         private IRound round;
 
@@ -37,7 +37,7 @@ namespace TurnAi {
             HttpListenerResponse response = context.Response;
 
             // translate robot name to id
-            string? robotName = request.Url?.LocalPath;
+            string? robotName = request.Url?.LocalPath?.TrimStart('/');
             if (robotName == null || !robotIds.ContainsKey(robotName)) {
                 WriteError(response, HttpStatusCode.NotFound, "Robot not found");
                 return;

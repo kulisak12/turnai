@@ -41,6 +41,12 @@ namespace TurnAi.PrisonnersDilemma {
         int IGame.NumPlayers => NumPlayers;
         public bool IsFinished { get; private set; } = false;
 
+        public PrisonnersDilemmaGame() {
+            for (int i = 0; i < NumPlayers; i++) {
+                history[i] = new List<Actions>();
+            }
+        }
+
         public void PlayTurn(int playerId, JsonNode? turn) {
             AssertPlayerId(playerId);
             AssertNotFinished();
