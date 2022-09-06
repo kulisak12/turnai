@@ -2,7 +2,7 @@ using System.Linq;
 using System.Text.Json.Nodes;
 using Xunit;
 
-using TurnAi.PrisonersDilemma;
+using TurnAi.Games.PrisonersDilemma;
 
 namespace TurnAi.GameTests {
 

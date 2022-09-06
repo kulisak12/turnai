@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace TurnAi.PrisonersDilemma {
+namespace TurnAi.Games.PrisonersDilemma {
 
     public class PrisonersDilemmaGame : IGame {
         private enum Actions {
