@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 namespace TurnAi {
 
     public class Client {
+        /// <summary>Function which takes game data and returns a turn to play.</summary>
         public delegate JsonNode Strategy(JsonNode gameInfo);
         private static readonly HttpClient client = new HttpClient();
 
+        /// <summary>
+        /// Continuously get game data and send back turns until the round is over.
+        /// </summary>
         public static void PlayRound(string robotName, Strategy strategy) {
             var url = Config.Address + robotName;
 
+            // TODO end of round
             while (true) {
                 var getResult = Get(url).Result;
                 if (getResult == null) {
@@ -32,12 +37,15 @@ namespace TurnAi {
             }
         }
 
+        /// <summary>Get game info.</summary>
         public static async Task<RobotDataResponse?> Get(string url) {
             try {
                 string responseBody = await client.GetStringAsync(url);
                 var response = JsonSerializer.Deserialize<RobotDataResponse>(
                     responseBody, Config.SerializerOptions
                 );
+                // if no game data is available, the response will be empty JSON object
+                // deserialzing it will set nullable objects, such as GameInfo, to null
                 if (response!.GameInfo == null) return null;
                 return response;
             }
@@ -47,13 +55,18 @@ namespace TurnAi {
             }
         }
 
+        /// <summary>Send turn.</summary>
+        /// <returns>
+        /// Error which occured while parsing the turn, or <c>null</c> on success.
+        /// </returns>
         public static async Task<string?> Post(string url, RobotTurnRequest request) {
             try {
                 var content = new StringContent(
                     JsonSerializer.Serialize(request, Config.SerializerOptions)
                 );
                 var response = await client.PostAsync(url, content);
-                if (response.IsSuccessStatusCode) return null; // no error
+                if (response.IsSuccessStatusCode) return null; // no error occured
+                // get error from response body
                 string errorJson = await response.Content.ReadAsStringAsync();
                 var postResult = JsonSerializer.Deserialize<RobotErrorResponse>(
                     errorJson, Config.SerializerOptions
