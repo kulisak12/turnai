@@ -14,8 +14,14 @@ namespace TurnAi.Games.PrisonersDilemma {
     /// <summary>Template for serializing Json to be sent to the player.</summary>
     public class GameInfo {
         public int TurnsLeft { get; set; }
-        public List<Actions>? YourActions { get; set; }
-        public List<Actions>? OpponentsActions { get; set; }
+        public List<Actions> YourActions { get; set; }
+        public List<Actions> OpponentsActions { get; set; }
+
+        public GameInfo(int turnsLeft, List<Actions> yourActions, List<Actions> opponentsActions) {
+            TurnsLeft = turnsLeft;
+            YourActions = yourActions;
+            OpponentsActions = opponentsActions;
+        }
     }
 
     public enum Actions {
@@ -66,11 +72,11 @@ namespace TurnAi.Games.PrisonersDilemma {
         public JsonNode GetGameInfo(int playerId) {
             AssertPlayerId(playerId);
             int otherPlayerId = 1 - playerId;
-            GameInfo gameInfo = new() {
-                TurnsLeft = NumTotalTurns - history[playerId].Count,
-                YourActions = history[playerId],
-                OpponentsActions = history[otherPlayerId],
-            };
+            var gameInfo = new GameInfo(
+                NumTotalTurns - turnsPlayed,
+                history[playerId],
+                history[otherPlayerId]
+            );
             return JsonSerializer.SerializeToNode(gameInfo, Config.SerializerOptions)!;
         }
 
