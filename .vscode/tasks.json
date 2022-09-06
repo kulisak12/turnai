@@ -23,6 +23,29 @@
                 "showReuseMessage": false,
                 "clear": true,
             }
-        }
+        },
+        {
+            "label": "buildMirrorRobot",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Robots/PrisonersDilemmaMirrorRobot/PrisonersDilemmaMirrorRobot.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile",
+            "options": {
+                "cwd": "${workspaceFolder}/src/Robots/PrisonersDilemmaMirrorRobot"
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true,
+            }
+        },
     ]
 }
