@@ -21,6 +21,23 @@ namespace TurnAi {
         JsonNode? RobotPost(int robotId, JsonNode turnNode);
     }
 
+    /// <summary>JSON structure used when parsing turn submitted by robot.</summary>
+    public class RobotTurnRequest {
+        public int Seq { get; set; }
+        public JsonNode? Turn { get; set; }
+    }
+
+    /// <summary>JSON structure used when sending game data to robots.</summary>
+    public class RobotDataResponse {
+        public int Seq { get; set; }
+        public JsonNode GameInfo { get; set; }
+
+        public RobotDataResponse(int seq, JsonNode gameInfo) {
+            Seq = seq;
+            GameInfo = gameInfo;
+        }
+    }
+
     /// <summary>
     /// One round of the tournament.
     /// New instance is created for each round.
@@ -40,23 +57,6 @@ namespace TurnAi {
                 for (int i = 0; i < Seq.Length; i++) {
                     Seq[i] = Random.Shared.Next(1, int.MaxValue / 2);
                 }
-            }
-        }
-
-        /// <summary>JSON structure used when parsing turn submitted by robot.</summary>
-        private class RobotTurnRequest {
-            public int Seq { get; set; }
-            public JsonNode? Turn { get; set; }
-        }
-
-        /// <summary>JSON structure used when sending game data to robots.</summary>
-        private class RobotDataResponse {
-            public int Seq { get; set; }
-            public JsonNode GameInfo { get; set; }
-
-            public RobotDataResponse(int seq, JsonNode gameInfo) {
-                Seq = seq;
-                GameInfo = gameInfo;
             }
         }
 
@@ -98,7 +98,7 @@ namespace TurnAi {
             if (!match.Game.MayPlay(playerId)) return null;
 
             JsonNode gameInfo = match.Game.GetGameInfo(playerId);
-            RobotDataResponse response = new(match.Seq[playerId], gameInfo);
+            var response = new RobotDataResponse(match.Seq[playerId], gameInfo);
             return JsonSerializer.SerializeToNode(response, Config.SerializerOptions);
         }
 
@@ -109,7 +109,7 @@ namespace TurnAi {
             }
             Match match = matches[robotId];
             int playerId = match.PlayerIds[robotId];
-            RobotTurnRequest request = JsonSerializer.Deserialize<RobotTurnRequest>(
+            var request = JsonSerializer.Deserialize<RobotTurnRequest>(
                 turnNode, Config.SerializerOptions
             )!;
 
@@ -147,16 +147,16 @@ namespace TurnAi {
         }
 
         private void StartNewMatch(int[] robotsInMatch) {
-                IGame game = gameFactory.Create();
-                Dictionary<int, int> playerIds = new();
-                for (int i = 0; i < robotsInMatch.Length; i++) {
-                    playerIds.Add(robotsInMatch[i], i);
-                }
-                Match match = new(playerIds, game);
-                foreach (int robotId in robotsInMatch) {
-                    matches.Add(robotId, match);
-                }
+            IGame game = gameFactory.Create();
+            Dictionary<int, int> playerIds = new();
+            for (int i = 0; i < robotsInMatch.Length; i++) {
+                playerIds.Add(robotsInMatch[i], i);
             }
+            Match match = new(playerIds, game);
+            foreach (int robotId in robotsInMatch) {
+                matches.Add(robotId, match);
+            }
+        }
 
         // throw an exception if robotId is invalid
         private void AssertRobotId(int robotId) {

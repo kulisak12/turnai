@@ -5,25 +5,25 @@ using System.Text.Json.Nodes;
 
 namespace TurnAi.Games.PrisonersDilemma {
 
+    /// <summary>Template for deserializing Json provided by the player.</summary>
+    /// <remarks>All fields are nullable to distinguish missing values.</remarks>
+    public class Turn {
+        public Actions? Action { get; set; }
+    }
+
+    /// <summary>Template for serializing Json to be sent to the player.</summary>
+    public class GameInfo {
+        public int TurnsLeft { get; set; }
+        public List<Actions>? YourActions { get; set; }
+        public List<Actions>? OpponentsActions { get; set; }
+    }
+
+    public enum Actions {
+        Silent = 0,
+        Betray = 1
+    }
+
     public class PrisonersDilemmaGame : IGame {
-        private enum Actions {
-            Silent = 0,
-            Betray = 1
-        }
-
-        /// <summary>Template for deserializing Json provided by the player.</summary>
-        /// <remarks>All fields are nullable to distinguish missing values.</remarks>
-        private class Turn {
-            public Actions? Action { get; set; }
-        }
-
-        /// <summary>Template for serializing Json to be sent to the player.</summary>
-        private class GameInfo {
-            public int TurnsLeft { get; set; }
-            public List<Actions>? YourActions { get; set; }
-            public List<Actions>? OpponentsActions { get; set; }
-        }
-
         // first index = my action, second index = opponent's action
         private static readonly int[,] payoffs = new int[,] {
             {3, 0},
