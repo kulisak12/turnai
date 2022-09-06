@@ -130,6 +130,11 @@ namespace TurnAi {
             return (error == null) ? null : Utility.GetErrorNode(error);
         }
 
+        public int GetPoints(int robotId) {
+            AssertRobotId(robotId);
+            return totalPoints[robotId];
+        }
+
         private void FinishMatch(Match match) {
             foreach (int robotId in match.PlayerIds.Keys) {
                 int playerId = match.PlayerIds[robotId];
