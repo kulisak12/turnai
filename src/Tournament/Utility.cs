@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace TurnAi {
@@ -19,9 +20,7 @@ namespace TurnAi {
         public static Action Noop = () => { };
 
         public static JsonNode GetErrorNode(string message) {
-            return new JsonObject {
-                { "error", message },
-            };
+            return JsonSerializer.SerializeToNode(new RobotErrorResponse(message))!;
         }
     }
 }

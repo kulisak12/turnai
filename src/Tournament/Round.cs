@@ -38,6 +38,15 @@ namespace TurnAi {
         }
     }
 
+    /// <summary>JSON structure used when reporting errors in submitted turn.</summary>
+    public class RobotErrorResponse {
+        public string Error { get; set; }
+
+        public RobotErrorResponse(string error) {
+            Error = error;
+        }
+    }
+
     /// <summary>
     /// One round of the tournament.
     /// New instance is created for each round.
