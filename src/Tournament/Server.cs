@@ -8,14 +8,15 @@ using System.Text.Json.Nodes;
 
 namespace TurnAi {
     public class Server {
-        private Dictionary<string, int> robotIds = new() {
-            { "alice", 0 },
-            { "bob", 1 },
-        };
+        private Dictionary<string, int> robotIds;
         private IRound round;
 
-        public Server(IRound round) {
+        public Server(IRound round, string[] robotNames) {
             this.round = round;
+            robotIds = new Dictionary<string, int>();
+            for (int i = 0; i < robotNames.Length; i++) {
+                robotIds.Add(robotNames[i], i);
+            }
         }
 
         public void SetRound(IRound round) => this.round = round;
