@@ -1,6 +1,7 @@
 using TurnAi.Games.PrisonersDilemma;
 
 using System;
+using System.Threading;
 
 namespace TurnAi {
     class Program {
@@ -12,8 +13,9 @@ namespace TurnAi {
             var round = new Round(numRobots, matchMaker, gameFactory);
             round.OnRoundFinished = () => PrintPoints(round);
 
+            CancellationTokenSource cts = new CancellationTokenSource();
             Server server = new Server(round, robotNames);
-            server.Run(Config.Address);
+            server.Run(Config.Address, cts.Token);
         }
 
         static void PrintPoints(Round round) {

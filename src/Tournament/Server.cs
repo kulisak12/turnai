@@ -5,6 +5,8 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TurnAi {
     public class Server {
@@ -21,15 +23,15 @@ namespace TurnAi {
 
         public void SetRound(IRound round) => this.round = round;
 
-        public void Run(string address) {
+        public void Run(string address, CancellationToken token) {
             using var listener = new HttpListener();
             listener.Prefixes.Add(address);
             listener.Start();
             Console.WriteLine("Listening on " + address);
 
-            while (true) {
-                HttpListenerContext context = listener.GetContext(); // TODO async
-                HandleRequest(context);
+            while (!token.IsCancellationRequested) {
+                HttpListenerContext context = listener.GetContext();
+                Task.Run(() => HandleRequest(context));
             }
         }
 
