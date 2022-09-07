@@ -84,9 +84,9 @@ namespace TurnAi {
         private Match?[] matches; // mapping between robot ids and matches
         private int[] totalPoints;
         private int numRunningMatches = 0;
+        private TaskCompletionSource tcs = new TaskCompletionSource();
 
         public int NumRobots { get; }
-        public Action? OnRoundFinished { get; set; } = null;
         public bool IsFinished {
             get {
                 lock (matchMaker) {
@@ -94,6 +94,7 @@ namespace TurnAi {
                 }
             }
         }
+        public Task RoundFinished => tcs.Task;
 
         public Round(int numRobots, IMatchMaker matchMaker, IFactory<IGame> gameFactory) {
             NumRobots = numRobots;
@@ -169,7 +170,7 @@ namespace TurnAi {
                 if (match.WasFinished) return;
                 match.WasFinished = true;
             }
-            
+
             lock (matchMaker) {
                 foreach (int robotId in match.PlayerIds.Keys) {
                     int playerId = match.PlayerIds[robotId];
@@ -180,7 +181,7 @@ namespace TurnAi {
                 numRunningMatches--;
                 StartNewMatches();
                 // the following will only run once, when the last match finishes
-                if (IsFinished) OnRoundFinished?.Invoke();
+                if (IsFinished) tcs.SetResult();
             }
         }
 
