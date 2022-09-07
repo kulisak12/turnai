@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
@@ -60,6 +61,7 @@ namespace TurnAi {
             // PlayerIds: immutable
             public IGame Game;
             public int[] Seq;
+            public Stopwatch[] Timer;
             public bool WasFinished = false;
             // mapping between robot and player ids
             public readonly Dictionary<int, int> PlayerIds;
@@ -68,9 +70,12 @@ namespace TurnAi {
                 PlayerIds = playerIds;
                 Game = game;
                 Seq = new int[PlayerIds.Count];
-                // initialize sequence numbers randomly
-                for (int i = 0; i < Seq.Length; i++) {
+                Timer = new Stopwatch[PlayerIds.Count];
+
+                for (int i = 0; i < PlayerIds.Count; i++) {
+                    // initialize sequence numbers randomly
                     Seq[i] = Random.Shared.Next(1, int.MaxValue / 2);
+                    Timer[i] = new Stopwatch();
                 }
             }
         }
@@ -123,6 +128,11 @@ namespace TurnAi {
                 response = new RobotDataResponse(match.Seq[playerId], gameInfo);
             }
 
+            // if this is the first request for the turn, start measuring response time
+            if (!match.Timer[playerId].IsRunning) {
+                match.Timer[playerId].Start();
+            }
+
             return JsonSerializer.SerializeToNode(response, Config.SerializerOptions);
         }
 
@@ -148,6 +158,15 @@ namespace TurnAi {
                 // prevent playing out of turn
                 if (!match.Game.MayPlay(playerId)) {
                     return Utility.GetErrorNode("It is not your turn.");
+                }
+                // check response time
+                match.Timer[playerId].Stop();
+                TimeSpan elapsed = match.Timer[playerId].Elapsed;
+                match.Timer[playerId].Reset();
+                if (elapsed > Config.ResponseLimit) {
+                    // play default turn
+                    match.Game.PlayTurn(playerId, null);
+                    return Utility.GetErrorNode($"Took too long ({elapsed.TotalMilliseconds} ms).");
                 }
 
                 match.Game.PlayTurn(playerId, request.Turn);

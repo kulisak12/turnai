@@ -1,4 +1,4 @@
-using System.Net;
+using System;
 using System.Text.Json;
 
 namespace TurnAi {
@@ -16,6 +16,7 @@ namespace TurnAi {
         };
 
         public static string Address = "http://localhost:3000/";
+        public static TimeSpan ResponseLimit = TimeSpan.FromSeconds(2);
     }
 
 }
