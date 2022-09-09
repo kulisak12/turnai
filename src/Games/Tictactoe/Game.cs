@@ -17,12 +17,14 @@ namespace TurnAi.Games.Tictactoe {
         public char You { get; set; }
         public char Opponent { get; set; }
         public int Size { get; set; }
+        public int WinningLength { get; set; }
         public string[] Board { get; set; }
 
-        public GameInfo(char you, char opponent, int size, string[] board) {
+        public GameInfo(char you, char opponent, int size, int winningLength, string[] board) {
             You = you;
             Opponent = opponent;
             Size = size;
+            WinningLength = winningLength;
             Board = board;
         }
     }
@@ -126,6 +128,7 @@ namespace TurnAi.Games.Tictactoe {
                 (char)PlayerToSymbol(playerId),
                 (char)PlayerToSymbol(otherPlayerId),
                 boardSize,
+                WinningLength,
                 board
             );
             return JsonSerializer.SerializeToNode(gameInfo, Config.SerializerOptions)!;
