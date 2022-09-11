@@ -16,13 +16,18 @@ namespace TurnAi.Games.Tictactoe {
     public class GameInfo {
         public char You { get; set; }
         public char Opponent { get; set; }
+        public char Empty { get; set; }
         public int Size { get; set; }
         public int WinningLength { get; set; }
         public string[] Board { get; set; }
 
-        public GameInfo(char you, char opponent, int size, int winningLength, string[] board) {
+        public GameInfo(
+            char you, char opponent, char empty,
+            int size, int winningLength, string[] board
+        ) {
             You = you;
             Opponent = opponent;
+            Empty = empty;
             Size = size;
             WinningLength = winningLength;
             Board = board;
@@ -139,6 +144,7 @@ namespace TurnAi.Games.Tictactoe {
             var gameInfo = new GameInfo(
                 (char)PlayerToSymbol(playerId),
                 (char)PlayerToSymbol(otherPlayerId),
+                (char)Symbol.Empty,
                 boardSize,
                 WinningLength,
                 board

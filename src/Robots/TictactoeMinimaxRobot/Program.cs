@@ -75,7 +75,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
         ) {
             List<TurnOption> options = new List<TurnOption>();
             // go through all possible next turns
-            foreach (var playCoords in GetEmptyCoords(board)) {
+            foreach (var playCoords in GetEmptyCoords(board, gameInfo)) {
                 // find the score increase
                 int scoreBefore = PosScore(playCoords, board, gameInfo);
                 var modBoard = new ModifiedBoard(board, playCoords, player);
@@ -100,11 +100,11 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             return options.FindAll(o => o.Score == maxScore);
         }
 
-        static List<Coords> GetEmptyCoords(Board board) {
+        static List<Coords> GetEmptyCoords(Board board, GameInfo gameInfo) {
             List<Coords> coords = new List<Coords>();
             for (int y = 0; y < board.Size; y++) {
                 for (int x = 0; x < board.Size; x++) {
-                    if (board.GetSymbol(new Coords() { X = x, Y = y }) == ' ') {
+                    if (board.GetSymbol(new Coords() { X = x, Y = y }) == gameInfo.Empty) {
                         coords.Add(new Coords() { X = x, Y = y });
                     }
                 }
