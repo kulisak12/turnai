@@ -35,6 +35,12 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             GameInfo gameInfo = JsonSerializer.Deserialize<GameInfo>(
                 gameInfoNode, Config.SerializerOptions
             )!;
+            var bestTurn = FindBestTurn(gameInfo);
+            var turn = new Turn() { X = bestTurn.X, Y = bestTurn.Y };
+            return JsonSerializer.SerializeToNode(turn, Config.SerializerOptions)!;
+        }
+
+        public static Coords FindBestTurn(GameInfo gameInfo) {
             var options = ConstructNextTurns(new Board(gameInfo.Board), gameInfo.You, 0, gameInfo);
 
             // one minimax iteration (more would be too slow)
@@ -53,9 +59,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
                     bestTurn = option.Turn.MoveCoords;
                 }
             }
-
-            var turn = new Turn() { X = bestTurn.X, Y = bestTurn.Y };
-            return JsonSerializer.SerializeToNode(turn, Config.SerializerOptions)!;
+            return bestTurn;
         }
 
         /// <summary>
