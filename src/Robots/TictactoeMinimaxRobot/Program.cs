@@ -143,9 +143,20 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             }
             // nobody can win with this line
             if (numMe > 0 && numOp > 0) return 0;
+
+            // the scoring is the same for both players
+            // just negative if it's the opponent
+            int numSymbols = numMe + numOp;
             // value number of symbols with 3rd power
-            if (numMe > 0) return Utility.IntPow(numMe, 3);
-            return -Utility.IntPow(numOp, 3);
+            // but if the game is won, the score is "infinite"
+            const int inf = 1_000_000;
+            int score;
+            if (numSymbols == gameInfo.WinningLength) {
+                score = inf;
+            } else {
+                score = Utility.IntPow(numSymbols, 3);
+            }
+            return (numMe > 0) ? score : -score;
         }
 
     }
