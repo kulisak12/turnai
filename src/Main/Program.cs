@@ -19,6 +19,7 @@ namespace TurnAi {
 
         static async Task RunRound(Server server, Round round) {
             CancellationTokenSource cts = new CancellationTokenSource();
+            server.SetRound(round);
             var serverTask = Task.Run(() => server.Run(Config.Address, cts.Token));
             await round.RoundFinished;
             cts.Cancel();
