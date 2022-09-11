@@ -10,6 +10,7 @@ using TurnAi.Games.Tictactoe.Utils;
 namespace TurnAi.Robots.Tictactoe.Minimax {
 
     class Program {
+        /// <summary>Tuple of turn and assigned score.</summary>
         struct TurnOption {
             public ModifiedBoard Turn { get; init; }
             public int Score { get; init; }
@@ -20,8 +21,9 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             }
         }
 
-        static readonly int topK = 500;
-        static readonly int maxDepth = 10;
+        /// <summary>Turns with score less than or equal to this will not be considered.</summary>
+        // a turn played with no symbols around results in a score of 20
+        static readonly int keepThreshold = 20;
 
         static void Main(string[] args) {
             if (args.Length != 1) {
@@ -37,19 +39,24 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
                 gameInfoNode, Config.SerializerOptions
             )!;
             var options = ConstructNextTurns(new Board(gameInfo.Board), gameInfo.You, 0, gameInfo);
-            options = TopK(options, topK);
+            // out of all possible turns, most just play a symbol in the open
+            // only focus on the ones that are more interesting
+            // however, always consider at least one turn
+            options = SoftFilter(options, keepThreshold);
 
             // one minimax iteration (more would be too slow)
             int bestScore = int.MinValue;
             Coords bestTurn = new Coords();
             foreach (var option in options) {
-                var board = (Board) option.Turn;
+                var board = (Board)option.Turn;
                 var nextOptions = ConstructNextTurns(
                     board, gameInfo.Opponent, option.Score, gameInfo
                 );
-                int score = nextOptions.Min(o => o.Score);
-                if (score > bestScore) {
-                    bestScore = score;
+                // opponent will try to minimize our score
+                int achievableScore = nextOptions.Min(o => o.Score);
+                // find the maximum achievable score
+                if (achievableScore > bestScore) {
+                    bestScore = achievableScore;
                     bestTurn = option.Turn.MoveCoords;
                 }
             }
@@ -58,12 +65,18 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             return JsonSerializer.SerializeToNode(turn, Config.SerializerOptions)!;
         }
 
+        /// <summary>
+        /// Construct all possible turns from the current board.
+        /// For each turn, calculate its score.
+        /// </summary>
+        /// <param name="initialScore">Score for board before the turn.</param>
         static List<TurnOption> ConstructNextTurns(
             Board board, char player, int initialScore, GameInfo gameInfo
         ) {
             List<TurnOption> options = new List<TurnOption>();
             // go through all possible next turns
             foreach (var playCoords in GetEmptyCoords(board)) {
+                // find the score increase
                 int scoreBefore = PosScore(playCoords, board, gameInfo);
                 var modBoard = new ModifiedBoard(board, playCoords, player);
                 int scoreAfter = PosScore(playCoords, modBoard, gameInfo);
@@ -72,12 +85,19 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             return options;
         }
 
-        static List<TurnOption> TopK(List<TurnOption> options, int k) {
-            options.Sort((a, b) => b.Score - a.Score);
-            if (options.Count > k) {
-                options.RemoveRange(k, options.Count - k);
+        /// <summary>
+        /// Filter out turns with score less than or equal to threshold.
+        /// If all turns would be filtered out, return the best turns among them.
+        /// </summary>
+        static List<TurnOption> SoftFilter(List<TurnOption> options, int threshold) {
+            var maxScore = options.Max(o => o.Score);
+            // filtering will keep some options
+            if (maxScore > threshold) {
+                options.RemoveAll(o => o.Score < threshold);
+                return options;
             }
-            return options;
+            // can't filter, so keep the best
+            return options.FindAll(o => o.Score == maxScore);
         }
 
         static List<Coords> GetEmptyCoords(Board board) {
@@ -127,10 +147,6 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             if (numMe > 0) return Utility.IntPow(numMe, 3);
             return -Utility.IntPow(numOp, 3);
         }
-
-
-
-
 
     }
 }

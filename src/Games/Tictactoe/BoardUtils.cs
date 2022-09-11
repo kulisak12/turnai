@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace TurnAi.Games.Tictactoe.Utils {
-
+    /// <summary>Board addressable by Coords.</summary>
     public interface IBoard {
         int Size { get; }
         bool IsOnBoard(Coords c);
         char GetSymbol(Coords c);
     }
 
+    /// <summary>Enumerable sequence of symbols on a board.</summary>
     public class Line : IEnumerable<char> {
         private readonly IBoard board;
         private readonly Coords start;
@@ -25,6 +26,7 @@ namespace TurnAi.Games.Tictactoe.Utils {
             Move fullMove = end - start;
             Move unitMove = new Move() { Dx = Math.Sign(fullMove.Dx), Dy = Math.Sign(fullMove.Dy) };
             Coords current = start;
+            // start and end are included
             do {
                 yield return board.GetSymbol(current);
                 current = current + unitMove;
@@ -34,6 +36,12 @@ namespace TurnAi.Games.Tictactoe.Utils {
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 
+    /// <summary>Wrapper hiding the board implementation.</summary>
+    /// <remarks>
+    /// Internally, board is a string array, as this is the most efficient form
+    /// when accounted for changes which need to be done when a move is made,
+    /// because only one line needs to be replaced and the rest can be reused.
+    /// </remarks>
     public struct Board : IBoard {
         private readonly string[] board;
 
@@ -47,6 +55,7 @@ namespace TurnAi.Games.Tictactoe.Utils {
         }
         public char GetSymbol(Coords c) => board[c.Y][c.X];
 
+        /// <summary>Create a new board which differs by a symbol.</summary>
         public Board WithSymbol(Coords c, char symbol) {
             string[] newBoard = new string[Size];
             Array.Copy(board, newBoard, Size);
@@ -57,6 +66,10 @@ namespace TurnAi.Games.Tictactoe.Utils {
         }
     }
 
+    /// <summary>
+    /// Board with one extra move stored separately.
+    /// Used to avoid copying the board when making a move.
+    /// </summary>
     public struct ModifiedBoard : IBoard {
         public Board Board { get; init; }
         public Coords MoveCoords { get; init; }
