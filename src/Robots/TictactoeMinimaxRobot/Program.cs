@@ -7,11 +7,12 @@ using System.Text.Json.Nodes;
 using TurnAi.Games.Tictactoe;
 using TurnAi.Games.Tictactoe.Utils;
 
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("RobotTests")]
 namespace TurnAi.Robots.Tictactoe.Minimax {
 
     class Program {
         /// <summary>Tuple of turn and assigned score.</summary>
-        struct TurnOption {
+        public struct TurnOption {
             public ModifiedBoard Turn { get; init; }
             public int Score { get; init; }
 
@@ -30,7 +31,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             Client.PlayRound(robotName, Strategy);
         }
 
-        static JsonNode Strategy(JsonNode gameInfoNode) {
+        public static JsonNode Strategy(JsonNode gameInfoNode) {
             GameInfo gameInfo = JsonSerializer.Deserialize<GameInfo>(
                 gameInfoNode, Config.SerializerOptions
             )!;
@@ -62,7 +63,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
         /// For each turn, calculate its score.
         /// </summary>
         /// <param name="initialScore">Score for board before the turn.</param>
-        static List<TurnOption> ConstructNextTurns(
+        public static List<TurnOption> ConstructNextTurns(
             Board board, char player, int initialScore, GameInfo gameInfo
         ) {
             List<TurnOption> options = new List<TurnOption>();
@@ -81,7 +82,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
         /// Filter out turns with score less than or equal to threshold.
         /// If all turns would be filtered out, return the best turns among them.
         /// </summary>
-        static List<TurnOption> SoftFilter(List<TurnOption> options, int threshold) {
+        public static List<TurnOption> SoftFilter(List<TurnOption> options, int threshold) {
             var maxScore = options.Max(o => o.Score);
             // filtering will keep some options
             if (maxScore > threshold) {
@@ -92,7 +93,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             return options.FindAll(o => o.Score == maxScore);
         }
 
-        static List<Coords> GetEmptyCoords(Board board, GameInfo gameInfo) {
+        public static List<Coords> GetEmptyCoords(Board board, GameInfo gameInfo) {
             List<Coords> coords = new List<Coords>();
             for (int y = 0; y < board.Size; y++) {
                 for (int x = 0; x < board.Size; x++) {
@@ -105,7 +106,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             return coords;
         }
 
-        static int PosScore(Coords pos, IBoard board, GameInfo gameInfo) {
+        public static int PosScore(Coords pos, IBoard board, GameInfo gameInfo) {
             // aggregate all lines that pass through pos
             int sumScore = 0;
             var dirs = new Move[] {
@@ -127,7 +128,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             return sumScore;
         }
 
-        static int LineScore(Line line, GameInfo gameInfo) {
+        public static int LineScore(Line line, GameInfo gameInfo) {
             int numMe = 0;
             int numOp = 0;
             foreach (char c in line) {
