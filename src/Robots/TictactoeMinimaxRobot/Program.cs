@@ -21,10 +21,6 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             }
         }
 
-        /// <summary>Turns with score less than or equal to this will not be considered.</summary>
-        // a turn played with no symbols around results in a score of 20
-        static readonly int keepThreshold = 20;
-
         static void Main(string[] args) {
             if (args.Length != 1) {
                 Console.Error.WriteLine("Required argument: robot name");
@@ -39,10 +35,6 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
                 gameInfoNode, Config.SerializerOptions
             )!;
             var options = ConstructNextTurns(new Board(gameInfo.Board), gameInfo.You, 0, gameInfo);
-            // out of all possible turns, most just play a symbol in the open
-            // only focus on the ones that are more interesting
-            // however, always consider at least one turn
-            options = SoftFilter(options, keepThreshold);
 
             // one minimax iteration (more would be too slow)
             int bestScore = int.MinValue;
