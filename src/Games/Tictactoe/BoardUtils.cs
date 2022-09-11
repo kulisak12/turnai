@@ -59,9 +59,9 @@ namespace TurnAi.Games.Tictactoe.Utils {
         public Board WithSymbol(Coords c, char symbol) {
             string[] newBoard = new string[Size];
             Array.Copy(board, newBoard, Size);
-            var row = newBoard[c.X].ToCharArray();
-            row[c.Y] = symbol;
-            newBoard[c.X] = new string(row);
+            var row = newBoard[c.Y].ToCharArray();
+            row[c.X] = symbol;
+            newBoard[c.Y] = new string(row);
             return new Board(newBoard);
         }
     }

@@ -106,11 +106,11 @@ namespace TurnAi.Games.Tictactoe {
         }
 
         private Symbol this[Coords c] {
-            get => (Symbol)board[c.X][c.Y];
+            get => (Symbol)board[c.Y][c.X];
             set {
-                var row = board[c.X].ToCharArray();
-                row[c.Y] = (char)value;
-                board[c.X] = new string(row);
+                var row = board[c.Y].ToCharArray();
+                row[c.X] = (char)value;
+                board[c.Y] = new string(row);
             }
         }
 
