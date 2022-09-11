@@ -22,5 +22,13 @@ namespace TurnAi {
         public static JsonNode GetErrorNode(string message) {
             return JsonSerializer.SerializeToNode(new RobotErrorResponse(message))!;
         }
+
+        public static int IntPow(int x, int exp) {
+            int result = 1;
+            for (int i = 0; i < exp; i++) {
+                result *= x;
+            }
+            return result;
+        }
     }
 }
