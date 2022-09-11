@@ -73,7 +73,7 @@ namespace TurnAi.Games.Tictactoe {
 
     public class TictactoeGame : IGame {
         private enum Symbol {
-            Empty = ' ',
+            Empty = '.',
             P0 = 'x',
             P1 = 'o'
         }
@@ -118,7 +118,15 @@ namespace TurnAi.Games.Tictactoe {
             fieldsLeft--;
             nextPlayer = 1 - nextPlayer;
             EvaluateTurn(coords, playerId);
+            PrintBoard();
             if (!FindFirstFreeField()) winner = -2; // draw
+        }
+
+        private void PrintBoard() {
+            Console.WriteLine();
+            foreach (var line in board) {
+                Console.WriteLine(line);
+            }
         }
 
         public bool MayPlay(int playerId) {
