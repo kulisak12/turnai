@@ -189,7 +189,7 @@ namespace TurnAi.Games.Tictactoe {
                 Move.Down - Move.Right
             };
             foreach (var dir in dirs) {
-                if (LineLength(coords, dir) > WinningLength) {
+                if (LineLength(coords, dir) >= WinningLength) {
                     winner = playerId;
                     return;
                 }
