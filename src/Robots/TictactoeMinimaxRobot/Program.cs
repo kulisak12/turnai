@@ -104,8 +104,9 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             List<Coords> coords = new List<Coords>();
             for (int y = 0; y < board.Size; y++) {
                 for (int x = 0; x < board.Size; x++) {
-                    if (board.GetSymbol(new Coords() { X = x, Y = y }) == gameInfo.Empty) {
-                        coords.Add(new Coords() { X = x, Y = y });
+                    Coords c = new Coords() { X = x, Y = y };
+                    if (board.GetSymbol(c) == gameInfo.Empty) {
+                        coords.Add(c);
                     }
                 }
             }
