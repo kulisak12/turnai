@@ -20,7 +20,9 @@ namespace TurnAi {
         public static Action Noop = () => { };
 
         public static JsonNode GetErrorNode(string message) {
-            return JsonSerializer.SerializeToNode(new RobotErrorResponse(message))!;
+            return JsonSerializer.SerializeToNode(
+                new RobotErrorResponse(message), Config.SerializerOptions
+            )!;
         }
 
         public static int IntPow(int x, int exp) {
