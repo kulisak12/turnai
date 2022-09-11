@@ -29,12 +29,16 @@ namespace TurnAi.Games.Tictactoe {
         }
     }
 
-    public struct Coords {
+    public record Coords {
         public int X;
         public int Y;
+
+        public static Move operator-(Coords a, Coords b) {
+            return new Move() { Dx = a.X - b.X, Dy = a.Y - b.Y };
+        }
     }
 
-    public struct Move {
+    public record Move {
         public int Dx;
         public int Dy;
 
