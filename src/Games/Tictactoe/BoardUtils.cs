@@ -1,12 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 
-using TurnAi.Games.Tictactoe;
-
-namespace TurnAi.Robots.PrisonersDilemma.Mirror {
+namespace TurnAi.Games.Tictactoe.Utils {
 
     public interface IBoard {
         int Size { get; }

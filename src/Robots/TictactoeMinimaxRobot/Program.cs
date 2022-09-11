@@ -5,8 +5,9 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 using TurnAi.Games.Tictactoe;
+using TurnAi.Games.Tictactoe.Utils;
 
-namespace TurnAi.Robots.PrisonersDilemma.Mirror {
+namespace TurnAi.Robots.Tictactoe.Minimax {
 
     class Program {
         struct TurnOption {
