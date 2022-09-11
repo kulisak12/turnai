@@ -29,6 +29,17 @@
             "stopAtEntry": false
         },
         {
+            "name": "Launch minimax robot",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildMirrorRobot",
+            "program": "${workspaceFolder}/src/Robots/TictactoeMinimaxRobot/bin/Debug/net6.0/TictactoeMinimaxRobot.dll",
+            "args": ["alice"],
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "stopAtEntry": false
+        },
+        {
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach"
