@@ -27,10 +27,11 @@ namespace TurnAi.Games.Tictactoe.Utils {
             Move unitMove = new Move() { Dx = Math.Sign(fullMove.Dx), Dy = Math.Sign(fullMove.Dy) };
             Coords current = start;
             // start and end are included
-            do {
+            while (current != end) {
                 yield return board.GetSymbol(current);
                 current = current + unitMove;
-            } while (current != end);
+            }
+            yield return board.GetSymbol(end);
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
