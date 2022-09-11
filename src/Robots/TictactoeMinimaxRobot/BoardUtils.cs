@@ -10,7 +10,7 @@ namespace TurnAi.Robots.PrisonersDilemma.Mirror {
 
     public interface IBoard {
         int Size { get; }
-        string[] GetBoard();
+        bool IsOnBoard(Coords c);
         char GetSymbol(Coords c);
     }
 
@@ -39,54 +39,49 @@ namespace TurnAi.Robots.PrisonersDilemma.Mirror {
     }
 
     public struct Board : IBoard {
-        private string[] board;
+        private readonly string[] board;
 
         public Board(string[] board) {
             this.board = board;
         }
 
         public int Size => board.Length;
-        public string[] GetBoard() => board;
+        public bool IsOnBoard(Coords pos) {
+            return pos.X >= 0 && pos.X < Size && pos.Y >= 0 && pos.Y < Size;
+        }
         public char GetSymbol(Coords c) => board[c.Y][c.X];
+
+        public Board WithSymbol(Coords c, char symbol) {
+            string[] newBoard = new string[Size];
+            Array.Copy(board, newBoard, Size);
+            var row = newBoard[c.X].ToCharArray();
+            row[c.Y] = symbol;
+            newBoard[c.X] = new string(row);
+            return new Board(newBoard);
+        }
     }
 
     public struct ModifiedBoard : IBoard {
-        public string[] Board { get; init; }
+        public Board Board { get; init; }
         public Coords MoveCoords { get; init; }
         public char MoveSymbol { get; init; }
 
-        public ModifiedBoard(string[] board, Coords moveCoords, char moveSymbol) {
+        public ModifiedBoard(Board board, Coords moveCoords, char moveSymbol) {
             Board = board;
             MoveCoords = moveCoords;
             MoveSymbol = moveSymbol;
         }
 
-        public int Size => Board.Length;
-
-        public string[] GetBoard() {
-            string[] newBoard = new string[Board.Length];
-            Array.Copy(Board, newBoard, Board.Length);
-            BoardUtils.PlayOnBoard(Board, MoveCoords, MoveSymbol);
-            return newBoard;
-        }
+        public int Size => Board.Size;
+        public bool IsOnBoard(Coords pos) => Board.IsOnBoard(pos);
 
         public char GetSymbol(Coords c) {
             if (c == MoveCoords) return MoveSymbol;
-            return Board[c.Y][c.X];
+            return Board.GetSymbol(c);
+        }
+
+        public static explicit operator Board(ModifiedBoard board) {
+            return board.Board.WithSymbol(board.MoveCoords, board.MoveSymbol);
         }
     }
-
-
-    public static class BoardUtils {
-        public static bool IsOnBoard(Coords pos, int size) {
-            return pos.X >= 0 && pos.X < size && pos.Y >= 0 && pos.Y < size;
-        }
-
-        public static void PlayOnBoard(string[] board, Coords coords, char symbol) {
-            var row = board[coords.X].ToCharArray();
-            row[coords.Y] = symbol;
-            board[coords.X] = new string(row);
-        }
-    }
-
 }

@@ -35,15 +35,16 @@ namespace TurnAi.Robots.PrisonersDilemma.Mirror {
             GameInfo gameInfo = JsonSerializer.Deserialize<GameInfo>(
                 gameInfoNode, Config.SerializerOptions
             )!;
-            var options = ConstructNextTurns(gameInfo.Board, gameInfo.You, 0, gameInfo);
+            var options = ConstructNextTurns(new Board(gameInfo.Board), gameInfo.You, 0, gameInfo);
             options = TopK(options, topK);
 
             // one minimax iteration (more would be too slow)
             int bestScore = int.MinValue;
             Coords bestTurn = new Coords();
             foreach (var option in options) {
+                var board = (Board) option.Turn;
                 var nextOptions = ConstructNextTurns(
-                    option.Turn.GetBoard(), gameInfo.Opponent, option.Score, gameInfo
+                    board, gameInfo.Opponent, option.Score, gameInfo
                 );
                 int score = nextOptions.Min(o => o.Score);
                 if (score > bestScore) {
@@ -57,13 +58,13 @@ namespace TurnAi.Robots.PrisonersDilemma.Mirror {
         }
 
         static List<TurnOption> ConstructNextTurns(
-            string[] board, char player, int initialScore, GameInfo gameInfo
+            Board board, char player, int initialScore, GameInfo gameInfo
         ) {
             List<TurnOption> options = new List<TurnOption>();
             // go through all possible next turns
             foreach (var playCoords in GetEmptyCoords(board)) {
-                int scoreBefore = PosScore(playCoords, new Board(board), gameInfo);
-                var modBoard = new ModifiedBoard(gameInfo.Board, playCoords, player);
+                int scoreBefore = PosScore(playCoords, board, gameInfo);
+                var modBoard = new ModifiedBoard(board, playCoords, player);
                 int scoreAfter = PosScore(playCoords, modBoard, gameInfo);
                 options.Add(new TurnOption(modBoard, initialScore + scoreAfter - scoreBefore));
             }
@@ -78,11 +79,11 @@ namespace TurnAi.Robots.PrisonersDilemma.Mirror {
             return options;
         }
 
-        static List<Coords> GetEmptyCoords(string[] board) {
+        static List<Coords> GetEmptyCoords(Board board) {
             List<Coords> coords = new List<Coords>();
-            for (int y = 0; y < board.Length; y++) {
-                for (int x = 0; x < board[y].Length; x++) {
-                    if (board[y][x] == ' ') {
+            for (int y = 0; y < board.Size; y++) {
+                for (int x = 0; x < board.Size; x++) {
+                    if (board.GetSymbol(new Coords() { X = x, Y = y }) == ' ') {
                         coords.Add(new Coords() { X = x, Y = y });
                     }
                 }
@@ -103,8 +104,8 @@ namespace TurnAi.Robots.PrisonersDilemma.Mirror {
                 for (int startShift = 0; startShift < gameInfo.WinningLength; startShift++) {
                     Coords start = pos - startShift * dir;
                     Coords end = start + (gameInfo.WinningLength - 1) * dir;
-                    if (!BoardUtils.IsOnBoard(start, gameInfo.Size)) continue;
-                    if (!BoardUtils.IsOnBoard(end, gameInfo.Size)) continue;
+                    if (!board.IsOnBoard(start)) continue;
+                    if (!board.IsOnBoard(end)) continue;
                     Line line = new Line(board, start, end);
                     sumScore += LineScore(line, gameInfo);
                 }
