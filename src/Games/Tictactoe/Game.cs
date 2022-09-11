@@ -95,7 +95,7 @@ namespace TurnAi.Games.Tictactoe {
             this.boardSize = boardSize;
             board = new string[boardSize];
             for (int i = 0; i < boardSize; i++) {
-                board[i] = new string(' ', boardSize);
+                board[i] = new string((char)Symbol.Empty, boardSize);
             }
             fieldsLeft = boardSize * boardSize;
         }
