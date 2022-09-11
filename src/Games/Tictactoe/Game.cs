@@ -246,4 +246,14 @@ namespace TurnAi.Games.Tictactoe {
         }
     }
 
+    public class TictactoeFactory : IFactory<IGame> {
+        public int BoardSize { get; init; }
+
+        public TictactoeFactory(int boardSize) {
+            BoardSize = boardSize;
+        }
+
+        public IGame Create() => new TictactoeGame(BoardSize);
+    }
+
 }
