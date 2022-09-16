@@ -152,7 +152,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             if (numSymbols == gameInfo.WinningLength) {
                 score = inf;
             } else {
-                score = Utility.IntPow(numSymbols, 3);
+                score = Utility.IntPow(numSymbols, 4);
             }
             return (numMe > 0) ? score : -score;
         }

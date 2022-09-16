@@ -16,7 +16,7 @@ namespace TurnAi {
         };
 
         public static string Address = "http://localhost:3000/";
-        public static TimeSpan ResponseLimit = TimeSpan.FromSeconds(2);
+        public static TimeSpan ResponseLimit = TimeSpan.FromSeconds(3);
     }
 
 }
