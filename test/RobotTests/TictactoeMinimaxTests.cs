@@ -44,9 +44,9 @@ namespace TurnAi.RobotTests {
                     "..........",
                     "..........",
                     "....oxo...",
-                    "....xo....",
-                    "...xo.x...",
-                    "...o......",
+                    "....xox...",
+                    "....o.x...",
+                    "..........",
                     "..........",
                     "..........",
                     "..........",
@@ -54,7 +54,7 @@ namespace TurnAi.RobotTests {
             );
             var turn = Program.FindBestTurn(gameInfo);
             var expected1 = new Coords() { X = 7, Y = 2 };
-            var expected2 = new Coords() { X = 2, Y = 7 };
+            var expected2 = new Coords() { X = 3, Y = 6 };
             Assert.True(turn.Equals(expected1) || turn.Equals(expected2));
         }
 
