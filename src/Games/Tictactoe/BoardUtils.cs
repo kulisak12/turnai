@@ -94,4 +94,19 @@ namespace TurnAi.Games.Tictactoe.Utils {
             return board.Board.WithSymbol(board.MoveCoords, board.MoveSymbol);
         }
     }
+
+    public class BoardUtils {
+        public static List<Coords> GetEmptyCoords(Board board, GameInfo gameInfo) {
+            List<Coords> coords = new List<Coords>();
+            for (int y = 0; y < board.Size; y++) {
+                for (int x = 0; x < board.Size; x++) {
+                    Coords c = new Coords() { X = x, Y = y };
+                    if (board.GetSymbol(c) == gameInfo.Empty) {
+                        coords.Add(c);
+                    }
+                }
+            }
+            return coords;
+        }
+    }
 }

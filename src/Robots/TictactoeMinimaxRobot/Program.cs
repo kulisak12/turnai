@@ -72,7 +72,7 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
         ) {
             List<TurnOption> options = new List<TurnOption>();
             // go through all possible next turns
-            foreach (var playCoords in GetEmptyCoords(board, gameInfo)) {
+            foreach (var playCoords in BoardUtils.GetEmptyCoords(board, gameInfo)) {
                 // find the score increase
                 int scoreBefore = PosScore(playCoords, board, gameInfo);
                 var modBoard = new ModifiedBoard(board, playCoords, player);
@@ -95,19 +95,6 @@ namespace TurnAi.Robots.Tictactoe.Minimax {
             }
             // can't filter, so keep the best
             return options.FindAll(o => o.Score == maxScore);
-        }
-
-        public static List<Coords> GetEmptyCoords(Board board, GameInfo gameInfo) {
-            List<Coords> coords = new List<Coords>();
-            for (int y = 0; y < board.Size; y++) {
-                for (int x = 0; x < board.Size; x++) {
-                    Coords c = new Coords() { X = x, Y = y };
-                    if (board.GetSymbol(c) == gameInfo.Empty) {
-                        coords.Add(c);
-                    }
-                }
-            }
-            return coords;
         }
 
         public static int PosScore(Coords pos, IBoard board, GameInfo gameInfo) {
