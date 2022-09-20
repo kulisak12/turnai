@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -61,27 +59,40 @@ namespace TurnAi.Robots.Tictactoe.Greedy {
                 Move.Right,
                 Move.Down + Move.Right,
                 Move.Down,
-                Move.Down - Move.Right
+                Move.Down - Move.Right,
+                - (Move.Right),
+                - (Move.Down + Move.Right),
+                - (Move.Down),
+                - (Move.Down - Move.Right),
             };
             foreach (var dir in dirs) {
-                Coords end = pos + (gameInfo.WinningLength - 1) * dir;
-                if (!board.IsOnBoard(pos)) continue;
-                if (!board.IsOnBoard(end)) continue;
-                Line line = new Line(board, pos, end);
-                int streak = LineStreak(line, gameInfo);
-                longestStreak = Math.Max(longestStreak, streak);
+                // need shifts to make it possible to play lines blocked from one side
+                for (int startShift = 0; startShift < gameInfo.WinningLength; startShift++) {
+                    Coords start = pos - startShift * dir;
+                    Coords end = start + (gameInfo.WinningLength - 1) * dir;
+                    if (!board.IsOnBoard(start)) continue;
+                    if (!board.IsOnBoard(end)) continue;
+                    Line line = new Line(board, start, end);
+                    int streak = LineStreak(line, gameInfo);
+                    longestStreak = Math.Max(longestStreak, streak);
+                }
             }
             return longestStreak;
         }
 
         public static int LineStreak(Line line, GameInfo gameInfo) {
-            int myStreak = 0;
+            // empty fields before and after streak are allowed
+            int streak = 0;
+            int maxStreak = 0;
             foreach (char c in line) {
-                if (c == gameInfo.You) myStreak++;
+                if (c == gameInfo.You) streak++;
                 else if (c == gameInfo.Opponent) return -1; // can't win this line
-                else break;
+                else {
+                    maxStreak = Math.Max(maxStreak, streak);
+                    streak = 0;
+                }
             }
-            return myStreak;
+            return streak;
         }
 
     }
