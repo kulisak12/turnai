@@ -21,7 +21,7 @@
             "name": "Launch mirror robot",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildMirrorRobot",
+            // no pre-launch task, build yourself
             "program": "${workspaceFolder}/src/Robots/PrisonersDilemmaMirrorRobot/bin/Debug/net6.0/PrisonersDilemmaMirrorRobot.dll",
             "args": ["alice"],
             "cwd": "${workspaceFolder}",
@@ -29,11 +29,11 @@
             "stopAtEntry": false
         },
         {
-            "name": "Launch minimax robot",
+            "name": "Launch greedy robot",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildMirrorRobot",
-            "program": "${workspaceFolder}/src/Robots/TictactoeMinimaxRobot/bin/Debug/net6.0/TictactoeMinimaxRobot.dll",
+            // no pre-launch task, build yourself
+            "program": "${workspaceFolder}/src/Robots/TictactoeGreedyRobot/bin/Debug/net6.0/TictactoeGreedyRobot.dll",
             "args": ["alice"],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
