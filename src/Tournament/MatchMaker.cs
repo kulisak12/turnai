@@ -9,7 +9,10 @@ namespace TurnAi {
         /// <summary>If all matches have been played.</summary>
         bool IsFinished { get; }
 
-        /// <summary>Add robot that may be placed in a new match.</summary>
+        /// <summary>
+        /// Add robot that may be placed in a new match.
+        /// No robots are waiting when the match maker is created, they must be added.
+        /// </summary>
         void AddWaitingRobot(int robotId);
 
         /// <summary>Get the next match as list of robots.</summary>
@@ -69,6 +72,37 @@ namespace TurnAi {
         public int[]? GetNextMatch() {
             if (nextMatches.Count == 0) return null;
             return nextMatches.Dequeue();
+        }
+    }
+
+    /// <summary>
+    /// Ensure that each robot plays against each other robot twice.
+    /// In the second match, the robots are switched.
+    /// </summary>
+    public class AllOrderedPairsMatchMaker : IMatchMaker {
+        private IMatchMaker unorderedMatchMaker;
+        // planned matches
+        private Queue<int[]> nextMatches = new();
+
+        public AllOrderedPairsMatchMaker(int numRobots) {
+            unorderedMatchMaker = new AllPairsMatchMaker(numRobots);
+        }
+
+        public bool IsFinished => unorderedMatchMaker.IsFinished;
+
+        public void AddWaitingRobot(int robotId) {
+            unorderedMatchMaker.AddWaitingRobot(robotId);
+        }
+
+        public int[]? GetNextMatch() {
+            // first take from local queue
+            if (nextMatches.Count > 0) return nextMatches.Dequeue();
+
+            int[]? match = unorderedMatchMaker.GetNextMatch();
+            if (match == null) return null;
+            // return one match immediately and queue the other
+            nextMatches.Enqueue(new int[] { match[1], match[0] });
+            return match;
         }
     }
 }
