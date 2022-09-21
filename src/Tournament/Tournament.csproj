@@ -5,4 +5,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Update="results.css" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>

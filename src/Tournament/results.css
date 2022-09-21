@@ -1,0 +1,29 @@
+body {
+    font-size: larger;
+    margin: 0;
+}
+header {
+    padding: 1em;
+    margin-bottom: 4em;
+    background-color: #523d7c;
+    color: lightgray;
+    font-size: 150%;
+    font-weight: bold;
+    box-shadow:
+        0px 2px 4px -1px rgba(0, 0, 0, 0.2),
+        0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+        0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+}
+
+table {
+    border-collapse: collapse;
+    margin: auto;
+}
+th, td {
+    border: 1px solid #202020;
+    padding: 0.25em;
+    text-align: right;
+}
+tr:nth-child(odd) {
+    background-color: #e0e0e0;
+}

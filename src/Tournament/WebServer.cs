@@ -11,6 +11,8 @@ namespace TurnAi {
         private string[] robotNames;
         private List<int[]> points;
         private ReaderWriterLockSlim pointsLock;
+        private static readonly string staticDir = AppDomain.CurrentDomain.BaseDirectory;
+        private static string style = File.ReadAllText(staticDir + "results.css");
 
         public WebServer(string[] robotNames, List<int[]> points, ReaderWriterLockSlim pointsLock) {
             this.robotNames = robotNames;
@@ -50,10 +52,22 @@ namespace TurnAi {
         private void HandleGetRequest(
             HttpListenerRequest request, HttpListenerResponse response, string path
         ) {
-            string body = BuildPointsTable();
-            string style = "";
-            string html = BuildPage("Tournament results", style, body);
+            string title = "Tournament results";
+            string header = BuildHeader(title);
+            string table = BuildPointsTable();
+            string body = header + "\n" + table;
+
+            string html = BuildPage(title, style, body);
             WriteResponse(response, HttpStatusCode.OK, html);
+        }
+
+        private string BuildHeader(string title) {
+            return
+$@"
+<header>
+{title}
+</header>
+";
         }
 
         private string BuildPointsTable() {
