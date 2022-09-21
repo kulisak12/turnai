@@ -91,7 +91,7 @@ namespace TurnAi.GameTests {
             game.PlayTurn(1, GetActionNode(0));
 
             var p0Info = game.GetGameInfo(0);
-            Assert.Equal(1, p0Info["turnsLeft"]!.GetValue<int>());
+            Assert.Equal(2, p0Info["turnsLeft"]!.GetValue<int>());
             Assert.Equal(
                 new int[] {0, 1, 1, 0},
                 ArrayFromNode(p0Info["yourActions"] as JsonArray)
