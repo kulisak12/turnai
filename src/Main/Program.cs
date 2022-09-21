@@ -25,7 +25,7 @@ namespace TurnAi {
                 if (i > 0) Task.Delay(timeBetweenRounds).Wait();
                 Console.WriteLine($"Starting round {i + 1} of {numRounds}.");
 
-                var matchMaker = new AllPairsMatchMaker(numRobots);
+                var matchMaker = new AllOrderedPairsMatchMaker(numRobots);
                 var round = new Round(numRobots, matchMaker, gameFactory);
                 RunRound(server, round).Wait();
                 var roundPoints = GetRoundPoints(round);
