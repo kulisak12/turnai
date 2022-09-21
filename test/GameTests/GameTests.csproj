@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Games\PrisonersDilemma\PrisonersDilemma.csproj" />
+    <ProjectReference Include="..\..\src\Games\Tictactoe\Tictactoe.csproj" />
   </ItemGroup>
 
 </Project>
