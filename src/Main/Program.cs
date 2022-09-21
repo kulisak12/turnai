@@ -8,19 +8,27 @@ using System.Threading.Tasks;
 namespace TurnAi {
     class Program {
         static void Main(string[] args) {
-            var robotNames = new string[] { "alice", "bob" };
-            int numRobots = robotNames.Length;
-            List<int[]> points = new List<int[]>();
-            var pointsLock = new ReaderWriterLockSlim();
-            var server = new Server(DummyRound.Instance, robotNames);
-            var webServer = new WebServer(robotNames, points, pointsLock);
+            // constants
             int numRounds = 2;
             TimeSpan timeBetweenRounds = TimeSpan.FromMinutes(0.5);
             var gameFactory = new TictactoeFactory(15);
+            var robotNames = new string[] { "alice", "bob" };
 
+            int numRobots = robotNames.Length;
+            List<int[]> points = new List<int[]>();
+            // lock is required because web server could read while we are writing
+            var pointsLock = new ReaderWriterLockSlim();
+            // server needs to be initialized with a round
+            // use a dummy round for now and swap later
+            var server = new Server(DummyRound.Instance, robotNames);
+            var webServer = new WebServer(robotNames, points, pointsLock);
+
+            // the web server runs completely separately
             var webServerTask = Task.Run(
                 () => webServer.Run(Config.WebAddress, CancellationToken.None)
             );
+
+            // rounds
             for (int i = 0; i < numRounds; i++) {
                 if (i > 0) Task.Delay(timeBetweenRounds).Wait();
                 Console.WriteLine($"Starting round {i + 1} of {numRounds}.");
@@ -41,6 +49,7 @@ namespace TurnAi {
             webServerTask.Wait(); // leave web server running, stop with Ctrl+C
         }
 
+        /// <summary>Run API server until the round is finished.</summary>
         static async Task RunRound(Server server, Round round) {
             CancellationTokenSource cts = new CancellationTokenSource();
             server.SetRound(round);
