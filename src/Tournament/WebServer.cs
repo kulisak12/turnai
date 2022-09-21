@@ -58,7 +58,7 @@ namespace TurnAi {
 
         private string BuildPointsTable() {
             StringBuilder sb = new StringBuilder();
-            sb.Append("<table>");
+            sb.Append("<table>\n");
             // header
             sb.Append("<tr><th>Round</th>");
             for (int i = 0; i < robotNames.Length; i++) {
@@ -66,7 +66,7 @@ namespace TurnAi {
                 sb.Append(robotNames[i]);
                 sb.Append("</th>");
             }
-            sb.Append("</tr>");
+            sb.Append("</tr>\n");
 
             pointsLock.EnterReadLock();
             try {
@@ -80,7 +80,7 @@ namespace TurnAi {
                         sb.Append(points[i][j]);
                         sb.Append("</td>");
                     }
-                    sb.Append("</tr>");
+                    sb.Append("</tr>\n");
                 }
             }
             finally {
