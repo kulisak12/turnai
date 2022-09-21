@@ -11,7 +11,9 @@ namespace TurnAi {
             var robotNames = new string[] { "alice", "bob" };
             int numRobots = robotNames.Length;
             List<int[]> points = new List<int[]>();
-            Server server = new Server(DummyRound.Instance, robotNames);
+            var pointsLock = new ReaderWriterLockSlim();
+            var server = new Server(DummyRound.Instance, robotNames);
+            var webServer = new WebServer(robotNames, points, pointsLock);
             int numRounds = 2;
             TimeSpan timeBetweenRounds = TimeSpan.FromMinutes(10);
             var gameFactory = new TictactoeFactory(15);
@@ -24,8 +26,13 @@ namespace TurnAi {
                 var round = new Round(numRobots, matchMaker, gameFactory);
                 RunRound(server, round).Wait();
                 var roundPoints = GetRoundPoints(round);
-                points.Add(roundPoints);
 
+                pointsLock.EnterWriteLock();
+                try {
+                    points.Add(roundPoints);
+                } finally {
+                    pointsLock.ExitWriteLock();
+                }
                 Console.WriteLine($"Ending round {i + 1}.");
             }
         }
@@ -33,7 +40,7 @@ namespace TurnAi {
         static async Task RunRound(Server server, Round round) {
             CancellationTokenSource cts = new CancellationTokenSource();
             server.SetRound(round);
-            var serverTask = Task.Run(() => server.Run(Config.Address, cts.Token));
+            var serverTask = Task.Run(() => server.Run(Config.ApiAddress, cts.Token));
             await round.RoundFinished;
             cts.Cancel();
             await serverTask;

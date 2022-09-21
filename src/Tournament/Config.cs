@@ -15,7 +15,8 @@ namespace TurnAi {
             WriteIndented = true,
         };
 
-        public static string Address = "http://localhost:3000/";
+        public static string ApiAddress = "http://localhost:3000/";
+        public static string WebAddress = "http://localhost:4000/";
         public static TimeSpan ResponseLimit = TimeSpan.FromSeconds(3);
     }
 

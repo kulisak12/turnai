@@ -16,7 +16,7 @@ namespace TurnAi {
         /// Continuously get game data and send back turns until the round is over.
         /// </summary>
         public static void PlayRound(string robotName, Strategy strategy) {
-            var url = Config.Address + robotName;
+            var url = Config.ApiAddress + robotName;
 
             // TODO end of round
             while (true) {
