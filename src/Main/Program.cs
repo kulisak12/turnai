@@ -15,9 +15,12 @@ namespace TurnAi {
             var server = new Server(DummyRound.Instance, robotNames);
             var webServer = new WebServer(robotNames, points, pointsLock);
             int numRounds = 2;
-            TimeSpan timeBetweenRounds = TimeSpan.FromMinutes(10);
+            TimeSpan timeBetweenRounds = TimeSpan.FromMinutes(0.5);
             var gameFactory = new TictactoeFactory(15);
 
+            var webServerTask = Task.Run(
+                () => webServer.Run(Config.WebAddress, CancellationToken.None)
+            );
             for (int i = 0; i < numRounds; i++) {
                 if (i > 0) Task.Delay(timeBetweenRounds).Wait();
                 Console.WriteLine($"Starting round {i + 1} of {numRounds}.");
@@ -35,6 +38,7 @@ namespace TurnAi {
                 }
                 Console.WriteLine($"Ending round {i + 1}.");
             }
+            webServerTask.Wait(); // leave web server running, stop with Ctrl+C
         }
 
         static async Task RunRound(Server server, Round round) {
