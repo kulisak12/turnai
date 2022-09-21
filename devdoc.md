@@ -42,3 +42,13 @@ instance. It is run asynchronously and can be cancelled with a
 
 The webserver isn't cancellable, it is expected that the program will be
 interrupted with `Ctrl+C`.
+
+## Building
+
+The entire application can be built and executed using the `dotnet` command in
+the `src/Main` directory.
+
+## Code documentation
+
+The most important code parts are documented with doccomments. The documentation
+can be generated using `doxygen Doxyfile` in the `src/main` directory.
