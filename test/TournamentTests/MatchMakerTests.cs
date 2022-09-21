@@ -136,6 +136,9 @@ namespace TurnAi.TournamentTests {
             matchMaker.AddWaitingRobot(0);
             matchMaker.AddWaitingRobot(1);
             Assert.NotNull(matchMaker.GetNextMatch());
+            Assert.Null(matchMaker.GetNextMatch());
+            matchMaker.AddWaitingRobot(0);
+            matchMaker.AddWaitingRobot(1);
             Assert.NotNull(matchMaker.GetNextMatch());
             Assert.Null(matchMaker.GetNextMatch());
         }

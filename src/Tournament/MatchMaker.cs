@@ -83,15 +83,28 @@ namespace TurnAi {
         private IMatchMaker unorderedMatchMaker;
         // planned matches
         private Queue<int[]> nextMatches = new();
+        private int?[] nextOpponents;
+        private HashSet<int> waitingForSecondMatch = new();
 
         public AllOrderedPairsMatchMaker(int numRobots) {
             unorderedMatchMaker = new AllPairsMatchMaker(numRobots);
+            nextOpponents = new int?[numRobots];
         }
 
         public bool IsFinished => nextMatches.Count == 0 && unorderedMatchMaker.IsFinished;
 
         public void AddWaitingRobot(int robotId) {
-            unorderedMatchMaker.AddWaitingRobot(robotId);
+            int? opponentId = nextOpponents[robotId];
+            // find an entirely new pair
+            if (opponentId == null) {
+                unorderedMatchMaker.AddWaitingRobot(robotId);
+                return;
+            }
+            // add the other match to queue, if possible
+            waitingForSecondMatch.Add(robotId);
+            if (waitingForSecondMatch.Contains(opponentId.Value)) {
+                EnqueueSecondMatch(robotId, opponentId.Value);
+            }
         }
 
         public int[]? GetNextMatch() {
@@ -100,9 +113,26 @@ namespace TurnAi {
 
             int[]? match = unorderedMatchMaker.GetNextMatch();
             if (match == null) return null;
-            // return one match immediately and queue the other
-            nextMatches.Enqueue(new int[] { match[1], match[0] });
-            return match;
+
+            // plan the second match
+            nextOpponents[match[0]] = match[1];
+            nextOpponents[match[1]] = match[0];
+            // return the first match in ascending order
+            if (match[0] < match[1]) return match;
+            return new int[] { match[1], match[0] };
+        }
+
+        private void EnqueueSecondMatch(int robotId, int opponentId) {
+            nextOpponents[robotId] = null;
+            nextOpponents[opponentId] = null;
+            waitingForSecondMatch.Remove(robotId);
+            waitingForSecondMatch.Remove(opponentId);
+            // add the match in descending order
+            if (robotId > opponentId) {
+                nextMatches.Enqueue(new int[] { robotId, opponentId });
+            } else {
+                nextMatches.Enqueue(new int[] { opponentId, robotId });
+            }
         }
     }
 }
