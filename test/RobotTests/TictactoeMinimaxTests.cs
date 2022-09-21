@@ -57,19 +57,5 @@ namespace TurnAi.RobotTests {
             var expected2 = new Coords() { X = 3, Y = 6 };
             Assert.True(turn.Equals(expected1) || turn.Equals(expected2));
         }
-
-        [Fact]
-        public void LineEnumerableNumSymbols() {
-            Line line = new Line(
-                new BoardMockup(),
-                new Coords() { X = 0, Y = 0 },
-                new Coords() { X = 4, Y = 4 }
-            );
-            int numFields = 0;
-            foreach (var symbol in line) {
-                numFields++;
-            }
-            Assert.Equal(5, numFields);
-        }
     }
 }
