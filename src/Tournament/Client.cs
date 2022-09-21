@@ -18,7 +18,7 @@ namespace TurnAi {
         public static void PlayRound(string robotName, Strategy strategy) {
             var url = Config.ApiAddress + robotName;
 
-            // TODO end of round
+            // run until interrupted with Ctrl+C
             while (true) {
                 var getResult = Get(url).Result;
                 if (getResult == null) {
