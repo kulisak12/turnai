@@ -88,7 +88,7 @@ namespace TurnAi {
             unorderedMatchMaker = new AllPairsMatchMaker(numRobots);
         }
 
-        public bool IsFinished => unorderedMatchMaker.IsFinished;
+        public bool IsFinished => nextMatches.Count == 0 && unorderedMatchMaker.IsFinished;
 
         public void AddWaitingRobot(int robotId) {
             unorderedMatchMaker.AddWaitingRobot(robotId);
