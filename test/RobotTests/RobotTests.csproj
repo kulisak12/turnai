@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Robots\TictactoeMinimaxRobot\TictactoeMinimaxRobot.csproj" />
+    <ProjectReference Include="..\..\src\Robots\TictactoeGreedyRobot\TictactoeGreedyRobot.csproj" />
   </ItemGroup>
 
 </Project>
