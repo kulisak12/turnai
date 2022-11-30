@@ -235,7 +235,7 @@ namespace TurnAi.Games.Tictactoe {
             return true;
         }
 
-        private Symbol PlayerToSymbol(int playerId) {
+        private static Symbol PlayerToSymbol(int playerId) {
             return playerId == 0 ? Symbol.P0 : Symbol.P1;
         }
 
@@ -244,7 +244,7 @@ namespace TurnAi.Games.Tictactoe {
         }
 
         // throw an exception if playerId is invalid
-        private void AssertPlayerId(int playerId) {
+        private static void AssertPlayerId(int playerId) {
             if (playerId < 0 || playerId >= NumPlayers) {
                 throw new ArgumentOutOfRangeException(
                     nameof(playerId),

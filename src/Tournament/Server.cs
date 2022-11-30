@@ -31,7 +31,7 @@ namespace TurnAi {
 
             while (!token.IsCancellationRequested) {
                 HttpListenerContext context = listener.GetContext();
-                Task.Run(() => HandleRequest(context));
+                Task.Run(() => HandleRequest(context), token);
             }
         }
 
@@ -89,13 +89,13 @@ namespace TurnAi {
             WriteResponse(response, code, error);
         }
 
-        private void WriteError(
+        private static void WriteError(
             HttpListenerResponse response, HttpStatusCode code, string message
         ) {
             WriteResponse(response, code, Utility.GetErrorNode(message));
         }
 
-        private void WriteResponse(
+        private static void WriteResponse(
             HttpListenerResponse response, HttpStatusCode code, JsonNode? data
         ) {
             response.StatusCode = (int)code;

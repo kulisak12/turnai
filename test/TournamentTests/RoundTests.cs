@@ -89,7 +89,7 @@ namespace TurnAi.TournamentTests {
     }
 
     public class RoundTests {
-        public string? GetError(JsonNode? node) {
+        public static string? GetError(JsonNode? node) {
             return node?["error"]?.GetValue<string>() ?? null;
         }
 

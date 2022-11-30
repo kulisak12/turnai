@@ -92,7 +92,7 @@ namespace TurnAi.Games.PrisonersDilemma {
         }
 
         /// <returns>Parsed action and error message.</returns>
-        private ValueTuple<Actions, string?> ParseTurn(JsonNode? turn) {
+        private static ValueTuple<Actions, string?> ParseTurn(JsonNode? turn) {
             if (turn == null) {
                 return (defaultAction, "No turn provided.");
             }
@@ -124,7 +124,7 @@ namespace TurnAi.Games.PrisonersDilemma {
         }
 
         // throw an exception if playerId is invalid
-        private void AssertPlayerId(int playerId) {
+        private static void AssertPlayerId(int playerId) {
             if (playerId < 0 || playerId >= NumPlayers) {
                 throw new ArgumentOutOfRangeException(
                     nameof(playerId),

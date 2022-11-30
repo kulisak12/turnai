@@ -17,7 +17,7 @@ namespace TurnAi {
     }
 
     public static class Utility {
-        public static Action Noop = () => { };
+        public static readonly Action Noop = () => { };
 
         public static JsonNode GetErrorNode(string message) {
             return JsonSerializer.SerializeToNode(

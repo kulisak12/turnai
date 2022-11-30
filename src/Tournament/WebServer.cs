@@ -28,7 +28,7 @@ namespace TurnAi {
 
             while (!token.IsCancellationRequested) {
                 HttpListenerContext context = listener.GetContext();
-                Task.Run(() => HandleRequest(context));
+                Task.Run(() => HandleRequest(context), token);
             }
         }
 
@@ -61,7 +61,7 @@ namespace TurnAi {
             WriteResponse(response, HttpStatusCode.OK, html);
         }
 
-        private string BuildHeader(string title) {
+        private static string BuildHeader(string title) {
             return
 $@"
 <header>
@@ -104,7 +104,7 @@ $@"
             return sb.ToString();
         }
 
-        private string BuildPage(string title, string style, string body) {
+        private static string BuildPage(string title, string style, string body) {
             return
 $@"<!DOCTYPE html>
 <html>
@@ -125,11 +125,11 @@ $@"<!DOCTYPE html>
 ";
         }
 
-        private void WriteError(HttpListenerResponse response, HttpStatusCode code) {
+        private static void WriteError(HttpListenerResponse response, HttpStatusCode code) {
             WriteResponse(response, code, null);
         }
 
-        private void WriteResponse(
+        private static void WriteResponse(
             HttpListenerResponse response, HttpStatusCode code, string? html
         ) {
             response.StatusCode = (int)code;
